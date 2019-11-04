@@ -11,6 +11,7 @@ namespace Market
     {
         static void Main(string[] args)
         {   List<(string ime, string sifra, int cena, int kol)> artikal = new List<(string ime, string sifra , int cena, int kol)>();
+            int kolicina = 0;
 
             if (File.Exists("artikal.txt"))
             {
@@ -36,7 +37,7 @@ namespace Market
                 switch (izbor)
                 {
                     case '1':
-                        { while (true)
+                         while (true)
                             {  Console.Write("Unesite ime: "); //kupimo informacije
                                 string ime = Console.ReadLine();
                                 Console.Write("Unesite sifru: ");
@@ -44,10 +45,11 @@ namespace Market
                                 Console.Write("Unesite cenu: ");
                                 int cena = int.Parse(Console.ReadLine());
                                 Console.Write("Unesite kolicinu: ");
-                                int kol = int.Parse(Console.ReadLine());
-                                artikal.Add((ime, sifra, cena, kol)); //dodajem novi element
+                                kolicina = int.Parse(Console.ReadLine());
+                                artikal.Add((ime, sifra, cena, kolicina)); //dodajem novi element
                                 
-                                Console.WriteLine("Ako zelite da napustite pritisnite x");
+
+                                Console.WriteLine("Ako zelite da napustite pritisnite x.");
                                 char izlazUnos = Console.ReadKey().KeyChar;
                                 if (izlazUnos == 'x')
                                 {
@@ -57,12 +59,13 @@ namespace Market
                                 {
                                     Console.WriteLine();
                                 }
-                        }
+                          
                 }
                         break;
                         
                     case '2':
                         {
+                           
                             Console.WriteLine("Pregled: \n==========");
                             foreach ((string ime, string sifra, int cena, int kol) broj in artikal)
                             {
@@ -72,8 +75,7 @@ namespace Market
                         }
                     case '3':
                         
-
-                            (string rIme, int rCena, int kolicina) racun; //novi tupl za racun
+                            (string rIme, int rCena) racun; //novi tupl za racun
                             racun.rCena = 0;
 
                         while (true)
@@ -82,27 +84,30 @@ namespace Market
                             string unos = Console.ReadLine();
 
                             Console.Write("Unesite kolicinu: ");
-                            racun.kolicina = int.Parse(Console.ReadLine());
+                            kolicina = int.Parse(Console.ReadLine());
                             for (int i = 0; i < artikal.Count; i++)
                             {
                                 if (artikal[i].sifra.Contains(unos) || (artikal[i].ime.Contains(unos)))
                                 {
                                     Console.Write($"Uneli ste: {artikal[i].ime}, sifra: {artikal[i].sifra}, cena {artikal[i].cena}\n");
-                                    racun.rCena = racun.rCena + racun.kolicina * artikal[i].cena;
+                                    racun.rCena = racun.rCena + kolicina * artikal[i].cena;
 
-                                    artikal[i].kol = artikal[i].kol - racun.kolicina; //KAKO MOGU DA NAPISEM OVU LINIJU DA MI JE FUNKCIONALNA???
+                                    if (artikal[i].kol >= kolicina)
+                                    {
+                                        artikal[i] = ((artikal[i].ime, artikal[i].sifra, artikal[i].cena, artikal[i].kol - kolicina));                                        
+                                    }
 
 
                                     Console.WriteLine($"Vas racun iznosi: {racun.rCena}");
                                     break;
                                 } else
                                 {
-                                    Console.WriteLine("Uneli ste nepostojecu sifru ili ime");
+                                    Console.WriteLine("Uneli ste nepostojecu sifru ili ime!");
                                 }
                             }
 
                             File.Delete("artikal.txt");
-                            Console.WriteLine("Ako zelite da napustite kupovinu pritniste x");
+                            Console.WriteLine("Ako zelite da napustite kupovinu pritniste x.");
                             char izlazRacun = Console.ReadKey().KeyChar;
                             if (izlazRacun == 'x')
                             {
@@ -116,6 +121,7 @@ namespace Market
                             break;
                     case '4':
                         
+
 
                         break;
                     case '5':
